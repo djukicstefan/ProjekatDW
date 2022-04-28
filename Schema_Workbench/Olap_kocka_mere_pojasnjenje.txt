@@ -1,0 +1,8 @@
+OLAP kocka - mere
+
+ReservationNumber - koliko smo imali razlicitih rezervacija u odredjenom periodu
+AverageCost 	  - prosecna cena rezervacija u nekom periodu
+FlightHours       - ukupno vreme provedeno u letenju avionom u nekom periodu
+SeatClassNumber   - broj razlicitih klasa sedista, da se vidi recimo koja klasa je bila najpopularnija u odredjenom periodu
+PlaneNumber       - broj razlicitih aviona koji su saobracali u odredjeno vreme
+FlightNumber      - broj razlicitih letova      -     |             |        -  

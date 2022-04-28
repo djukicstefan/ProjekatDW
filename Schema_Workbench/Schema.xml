@@ -1,0 +1,70 @@
+<Schema name="ReservationsSchema">
+  <Cube name="Reservations" visible="true" cache="true" enabled="true">
+    <Table name="reservations_fact" schema="public">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="passanger_dim_id" name="Passanger">
+      <Hierarchy name="Default" visible="true" hasAll="true" primaryKey="passanger_dim_id">
+        <Table name="passanger_dim" schema="public">
+        </Table>
+        <Level name="City" visible="true" table="passanger_dim" column="city" uniqueMembers="false">
+        </Level>
+        <Level name="Email" visible="true" table="passanger_dim" column="email" uniqueMembers="false">
+        </Level>
+        <Level name="LastName" visible="true" table="passanger_dim" column="last_name" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="plane_dim_id" name="Plane">
+      <Hierarchy name="Default" visible="true" hasAll="true" primaryKey="plane_dim_id">
+        <Table name="plane_dim" schema="public" alias="">
+        </Table>
+        <Level name="Airline" visible="true" table="plane_dim" column="airline" uniqueMembers="false">
+        </Level>
+        <Level name="Capacity" visible="true" table="plane_dim" column="capacity" uniqueMembers="false">
+        </Level>
+        <Level name="Model" visible="true" table="plane_dim" column="model" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="flight_dim_id" name="Flight">
+      <Hierarchy name="Default" visible="true" hasAll="true" primaryKey="flight_dim_id">
+        <Table name="flight_dim" schema="public">
+        </Table>
+        <Level name="DepartureDate" visible="true" table="flight_dim" column="departure_date" uniqueMembers="false">
+        </Level>
+        <Level name="ArrivalDate" visible="true" table="flight_dim" column="arrival_date" uniqueMembers="false">
+        </Level>
+        <Level name="DepartureCity" visible="true" table="flight_dim" column="departure_city" uniqueMembers="false">
+        </Level>
+        <Level name="ArrivalCity" visible="true" table="flight_dim" column="arrival_city" uniqueMembers="false">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="TimeDimension" visible="true" foreignKey="date_dim_id" name="Date">
+      <Hierarchy name="Default" visible="true" hasAll="true" primaryKey="date_dim_id">
+        <Table name="date_dim" schema="public">
+        </Table>
+        <Level name="Year" visible="true" table="date_dim" column="reservations_year" uniqueMembers="false" levelType="TimeYears">
+        </Level>
+        <Level name="Quarter" visible="true" table="date_dim" column="reservations_quarter" uniqueMembers="false" levelType="TimeQuarters">
+        </Level>
+        <Level name="Months" visible="true" table="date_dim" column="reservations_month" uniqueMembers="false" levelType="TimeMonths">
+        </Level>
+        <Level name="DayOfYear" visible="true" table="date_dim" column="reservations_day_of_year" uniqueMembers="false" levelType="TimeDays">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="ReservationNumber" column="reservation_id" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="AverageCost" column="total_cost" aggregator="avg" visible="true">
+    </Measure>
+    <Measure name="FlightHours" column="flight_duration" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="SeatClassNumber" column="seat_class" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="PlaneNumber" column="plane_dim_id" aggregator="distinct-count" visible="true">
+    </Measure>
+    <Measure name="FlightNumber" column="flight_dim_id" aggregator="distinct-count" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
