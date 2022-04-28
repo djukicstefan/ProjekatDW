@@ -12,7 +12,7 @@ create table Passanger (
 create table Plane (
 	plane_id integer NOT NULL PRIMARY KEY,
 	model varchar(50) NOT NULL,
-	airline varchar(50) NOT NULL,
+	airline varchar(100) NOT NULL,
 	capacity integer
 );
 

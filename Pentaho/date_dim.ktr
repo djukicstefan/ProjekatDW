@@ -531,7 +531,7 @@
     <seqname>SEQ_</seqname>
     <use_counter>Y</use_counter>
     <counter_name/>
-    <start_at>1</start_at>
+    <start_at>0</start_at>
     <increment_by>1</increment_by>
     <max_value>999999999</max_value>
     <attributes/>
@@ -752,7 +752,7 @@
     <sequence/>
     <min_year>1900</min_year>
     <max_year>2199</max_year>
-    <cache_size>5000</cache_size>
+    <cache_size>-1</cache_size>
     <preload_cache>N</preload_cache>
     <use_start_date_alternative>N</use_start_date_alternative>
     <start_date_alternative>none</start_date_alternative>
