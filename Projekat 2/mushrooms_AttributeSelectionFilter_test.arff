@@ -1,0 +1,19 @@
+@relation mushrooms_AttributeSelectionFilter_test
+
+@attribute odor {Almond,Anise,Creosote,Fishy,Foul,Musty,None,Pungent,Spicy}
+@attribute gill-spacing {Close,Crowded}
+@attribute stalk-surface-above-ring {Fibrous,Scaly,Silky,Smooth}
+@attribute veil-color {Brown,Orange,White,Yellow}
+@attribute class {Edible,Poisonous}
+
+@data
+Foul,Close,Silky,White,?
+Fishy,Close,Smooth,White,?
+None,Close,Smooth,White,?
+None,Close,Smooth,White,?
+Foul,Close,Smooth,White,?
+Foul,Close,Fibrous,White,Poisonous
+None,Close,Smooth,White,Edible
+Foul,Close,Silky,White,Poisonous
+None,Close,Smooth,White,Edible
+Pungent,Close,Smooth,White,Poisonous

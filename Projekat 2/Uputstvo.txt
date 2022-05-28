@@ -6,3 +6,11 @@ Date podatke ucitati u weka alatu i primeniti sledece algoritme za klasifikaciju
 	5. lBk (kNN algoritam) sa k = 1, k = 3, k = 89 (jer je neka preporuka sqrt(n), n -> ukupan broj slogova), k treba da bude 
 	neparan broj
 	6. OneR
+
+Date podatke ucitati u weka alatu i primeniti sledece algoritme za klasterizaciju:
+	1. SimpleKMeans - daje dosta lose rezultate; ako se za parametar initializationMethod: Farthest first malo se poboljsa 
+	rezutat
+	2. EM (expectation maximization) - dosta bolji rezultati
+
+Kada se primeni wekin filter (Attribute selection) nad fajlom mushrooms.arff i kada se koristi taj fajl daje malo losije 
+rezultate kada se primene isti algoritmi u odnosu na inicijalni.
