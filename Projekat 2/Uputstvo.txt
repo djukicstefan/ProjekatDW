@@ -1,0 +1,8 @@
+Date podatke ucitati u weka alatu i primeniti sledece algoritme za klasifikaciju:
+	1. NaiveBayes
+	2. ZeroR
+	3. J48 bez odsecanja (unpruned: false)
+	4. J48 sa odsecanjem (unpruned: true)
+	5. lBk (kNN algoritam) sa k = 1, k = 3, k = 89 (jer je neka preporuka sqrt(n), n -> ukupan broj slogova), k treba da bude 
+	neparan broj
+	6. OneR

@@ -1,0 +1,40 @@
+% Podaci za test su uzeti iz fajla mushrooms.arff a slogovi za test su birani pomocu random generatora
+% podaci su sa pozicije: 7453, 7873, 2511, 3104, 5462, 4503, 622, 6210, 2919, 34 
+
+@relation mushrooms_test
+
+@attribute cap-shape {Bell,Conical,Convex,Flat,Knobbed,Sunken}
+@attribute cap-surface {Fibrous,Grooves,Scaly,Smooth}
+@attribute cap-color {Brown,Buff,Cinnamon,Gray,Green,Pink,Purple,Red,White,Yellow}
+@attribute bruises {Yes,No}
+@attribute odor {Almond,Anise,Creosote,Fishy,Foul,Musty,None,Pungent,Spicy}
+@attribute gill-attachment {Attached,Free}
+@attribute gill-spacing {Close,Crowded}
+@attribute gill-size {Broad,Narrow}
+@attribute gill-color {Black,Brown,Buff,Chocolate,Gray,Green,Orange,Pink,Purple,Red,White,Yellow}
+@attribute stalk-shape {Enlarging,Tapering}
+@attribute stalk-root {Bulbous,Club,Equal,Rooted,Missing}
+@attribute stalk-surface-above-ring {Fibrous,Scaly,Silky,Smooth}
+@attribute stalk-surface-below-ring {Fibrous,Scaly,Silky,Smooth}
+@attribute stalk-color-above-ring {Brown,Buff,Cinnamon,Gray,Orange,Pink,Red,White,Yellow}
+@attribute stalk-color-below-ring {Brown,Buff,Cinnamon,Gray,Orange,Pink,Red,White,Yellow}
+@attribute veil-type {Partial,Universal}
+@attribute veil-color {Brown,Orange,White,Yellow}
+@attribute ring-number {None,One,Two}
+@attribute ring-type {Evanescent,Flaring,Large,None,Pendant}
+@attribute spore-print-color {Black,Brown,Buff,Chocolate,Green,Orange,Purple,White,Yellow}
+@attribute population {Abundant,Clustered,Numerous,Scattered,Several,Solitary}
+@attribute habitat {Grasses,Leaves,Meadows,Paths,Urban,Waste,Woods}
+@attribute class {Edible,Poisonous}
+
+@data
+Knobbed,Smooth,Brown,No,Foul,Free,Close,Narrow,Buff,Tapering,Missing,Silky,Smooth,White,Pink,Partial,White,One,Evanescent,White,Several,Paths,?
+Knobbed,Scaly,Brown,No,Fishy,Free,Close,Narrow,Buff,Tapering,Missing,Smooth,Smooth,White,Pink,Partial,White,One,Evanescent,White,Several,Woods,?
+Convex,Scaly,Gray,Yes,None,Free,Close,Broad,Purple,Tapering,Bulbous,Smooth,Smooth,White,Gray,Partial,White,One,Pendant,Black,Solitary,Woods,?
+Flat,Scaly,Gray,Yes,None,Free,Close,Broad,Purple,Tapering,Bulbous,Smooth,Smooth,White,White,Partial,White,One,Pendant,Black,Several,Woods,?
+Flat,Smooth,White,Yes,Foul,Free,Close,Broad,White,Tapering,Bulbous,Smooth,Smooth,White,White,Partial,White,One,Pendant,Chocolate,Scattered,Grasses,?
+Convex,Smooth,White,Yes,Foul,Free,Close,Broad,Pink,Tapering,Bulbous,Fibrous,Fibrous,White,White,Partial,White,One,Pendant,Chocolate,Several,Urban,Poisonous
+Sunken,Fibrous,Gray,No,None,Free,Close,Narrow,Brown,Enlarging,Equal,Smooth,Smooth,White,White,Partial,White,One,Pendant,Black,Several,Urban,Edible
+Flat,Scaly,Brown,No,Foul,Free,Close,Narrow,Buff,Tapering,Missing,Silky,Smooth,White,White,Partial,White,One,Evanescent,White,Several,Leaves,Poisonous
+Convex,Fibrous,Gray,Yes,None,Free,Close,Broad,Brown,Tapering,Bulbous,Smooth,Smooth,White,Pink,Partial,White,One,Pendant,Black,Solitary,Woods,Edible
+Convex,Smooth,Brown,Yes,Pungent,Free,Close,Narrow,Black,Enlarging,Equal,Smooth,Smooth,White,White,Partial,White,One,Pendant,Black,Scattered,Urban,Poisonous
