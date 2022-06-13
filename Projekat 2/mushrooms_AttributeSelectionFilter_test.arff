@@ -1,3 +1,6 @@
+% Podaci za test su uzeti iz fajla mushrooms.arff a slogovi za test su birani pomocu random generatora
+% podaci su sa pozicije: 7453, 7873, 2511, 3104, 5462, 4503, 622, 6210, 2919, 34 
+
 @relation mushrooms_AttributeSelectionFilter_test
 
 @attribute odor {Almond,Anise,Creosote,Fishy,Foul,Musty,None,Pungent,Spicy}

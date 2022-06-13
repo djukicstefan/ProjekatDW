@@ -1,0 +1,31 @@
+RDD (Resilient Redistributable Dataset) - kolekcija elemenata koja se moze paralelno obradjivati.
+
+RDD je redonly sto znaci da se podaci u njemu ne mogu menjati vec RDD implementrira interfejse pomocu kojih se podaci obrade
+i smeste u novi RDD.
+
+Spark cuva podatke in memory.
+
+JavaRDD<LabeledPoint>[] tmp = trainingData.randomSplit(new double[]{0.8, 0.2},13156123); // linija 220
+gornja linija deli podatke po random principu i 80% njih ce biti za trening i 20% njih ce biti za testiranje
+ovaj seed od 13156123 nemam pojma cemu sluzi.
+
+Map<Integer, Integer> categoricalFeaturesInfo = new HashMap<>(); // linija 170
+definise koji su atributi categorical features i koliko razlicitih vrednosti moze da uzme svaki od tih atributa
+atributi koji nisu definisani u okviru ove mape tretiraju se kao kontinualne vrednosti
+npr. ako nam je na prvoj poziciji binarni atribut to bi islo <0 (kao pizicija), 2 (vrednosti koje on moze da uzme 0 ili 1)>.
+algoritam radi i bez ove mape dosta dobro
+int maxBins = 32; // linija 173
+maksimalni broj kategorija kojima bi categorical features mogao da pripada ukoliko postoji
+
+JavaPairRDD<Object, Object> predictionAndLabel = testSet
+                .mapToPair(p -> new Tuple2<>(model.predict(p.features()), p.label())); // linija 231
+nad test set-om izvrsavamo mapToPair funkciju gde za svaki test set kreiramo tuple, prva vrednost bice klasa koju ce dodeliti
+nas model, druga vrednost je prava vrednost klase kojoj dati slog pripada.
+
+predictionAndLabel.filter(pl -> pl._1().equals(pl._2())).count() / (double) testSet.count() // linija 240
+proveravamo da li su prva vrednost i druga vrednost iste iz predictionAndLabel mape znaci ako su pl._1() i pl._2 iste vrednosti
+onda ce da odradi brojanje a to je ovo .count() i to delimo sa ukupnim brojem test Setova da bi dobili nas test error odnosno
+preciznost klasifikatora
+
+MinMaxScaler // linija 121
+ova metoda je poznata kao min-max normalizacija ili pod nazivom ponovno skaliranje, vrsi normalizaciju podataka po [min, max] principu

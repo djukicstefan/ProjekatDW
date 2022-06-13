@@ -14,3 +14,9 @@ Date podatke ucitati u weka alatu i primeniti sledece algoritme za klasterizacij
 
 Kada se primeni wekin filter (Attribute selection) nad fajlom mushrooms.arff i kada se koristi taj fajl daje malo losije 
 rezultate kada se primene isti algoritmi u odnosu na inicijalni.
+
+
+-----------------------------------------------------Pitanja sa odbrane-------------------------------------------------------------------
+Oba ova resenja se koriste za resavanje disbalansa u podacim (recimo da u class imamo 3000 jestivih i 500 otrovnih)
+1. Undersempling - smanjuje podatke klase koja vodi (znaci da ce da smanji broj jestivih u ovom slucaju)
+2. Oversempling  - kopira podatke u klasu koja je u manjini (znaci da ce se povecati broj otrovnih u ovom slucaju)

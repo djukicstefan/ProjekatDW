@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -62,6 +64,7 @@ public class Main {
         CsvParserSettings settings= new CsvParserSettings();
         settings.getFormat().setLineSeparator("\n");
         CsvParser parser = new CsvParser(settings);
+
         parser.beginParsing(getReader(path));
 
         String[] row = parser.parseNext();
@@ -71,9 +74,12 @@ public class Main {
                 int id = Integer.parseInt(row[0].trim());
                 String strClass = row[row.length-1].trim();
                 Double[] features = new Double[row.length-2];
+
                 for(int i = 1; i < row.length-1; i++)
                     features[i-1] = Double.parseDouble(row[i].trim());
-                data.add(RowFactory.create(id,features[0],features[1],features[2],features[3],features[4],features[5],features[6],features[7],features[8],features[9],strClass));
+
+                data.add(RowFactory.create(id,features[0],features[1],features[2],features[3],features[4],
+                        features[5],features[6],features[7],features[8],features[9],strClass));
             }
             catch(Exception ex) {
                 continue;
@@ -102,10 +108,13 @@ public class Main {
         StringIndexer indexer = new StringIndexer().setInputCol("Class").setOutputCol("ClassIndex");
         StringIndexerModel indexerModel = indexer.fit(dataFrame);
         dataFrame = indexerModel.transform(dataFrame);
-        StructField inputColSchema = dataFrame.schema().apply(indexer.getOutputCol());
-        classes = Attribute.fromStructField(inputColSchema).toMetadata().getMetadata("ml_attr").getStringArray("vals");
 
-        VectorAssembler assembler = new VectorAssembler().setInputCols(new String[]{"Area", "MajorAxisLength", "MinorAxisLength","Eccentricity","ConvexArea","EquivDiameter","Extent", "Perimeter", "Roundness","AspectRation"}).setOutputCol("features");
+        StructField inputColSchema = dataFrame.schema().apply(indexer.getOutputCol());
+        classes = Attribute.fromStructField(inputColSchema).toMetadata().getMetadata("ml_attr")
+                            .getStringArray("vals");
+
+        VectorAssembler assembler = new VectorAssembler().setInputCols(new String[]{"Area", "MajorAxisLength", "MinorAxisLength","Eccentricity","ConvexArea","EquivDiameter","Extent", "Perimeter", "Roundness","AspectRation"})
+                                                         .setOutputCol("features");
         dataFrame = assembler.transform(dataFrame);
         dataFrame = dataFrame.drop("Area").drop("MajorAxisLength").drop("MinorAxisLength").drop("Eccentricity").drop("ConvexArea").drop("EquivDiameter").drop("Extent").drop("Perimeter").drop("Roundness").drop("AspectRation");
 
@@ -115,14 +124,15 @@ public class Main {
 
 
         JavaSparkContext jc = JavaSparkContext.fromSparkContext(session.sparkContext());
-        dataFrame.show(3,false);
-        //dataFrame.printSchema();
+        dataFrame.show(100,false);
+        dataFrame.printSchema();
 
-        //1,3
+
         List<Row> rows = dataFrame.collectAsList();
         List<LabeledPoint> lbps = new ArrayList<LabeledPoint>();
         for(Row r :rows) {
-            lbps.add(new LabeledPoint(r.getDouble(1),org.apache.spark.mllib.linalg.Vectors.fromML((Vector)r.get(3))));
+            //1 - uzima ClassIndex, 3 - uzima scaledFeatures
+            lbps.add(new LabeledPoint(r.getDouble(1), Vectors.fromML((Vector)r.get(3))));
         }
         return jc.parallelize(lbps);
     }
@@ -133,8 +143,8 @@ public class Main {
 
             List<Object> predicted=preds.collect();
 
-            for(int i=0;i<predicted.size();i++){
-                fw.write(classes[new Double(predicted.get(i).toString()).intValue()]+ "\n");
+            for(int i = 0; i < predicted.size(); i++){
+                fw.write(classes[new Double(predicted.get(i).toString()).intValue()] + "\n");
             }
             fw.close();
         } catch (IOException ex) {
@@ -191,14 +201,20 @@ public class Main {
     public static void main(String[] args) {
         try {
             FileUtils.forceDelete(new File("D:/spark-models/"));
+            FileUtils.forceDelete(new File("./results"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        SparkSession session = SparkSession
+                .builder()
+                .appName("Rice Classificator")
+                .master("local")
+                .getOrCreate();
 
-        SparkSession session = SparkSession.builder().appName("RiceClassificator").master("local").getOrCreate();
         SparkContext context = session.sparkContext();
 
-        String path = "D:\\elfak\\IV godina\\Skladištenje podataka i otkrivanje znanja\\ProjekatDW\\Projekat 3\\RiceSeed\\src\\Rice.csv";
+        String path = "./src/Rice.csv";
         JavaRDD<LabeledPoint> trainingData = loadData(session, path);
 
         JavaRDD<LabeledPoint>[] tmp = trainingData.randomSplit(new double[]{0.8, 0.2},13156123);
@@ -210,10 +226,11 @@ public class Main {
         //SVMModel model = trainSVM(trainingSet);
         //DecisionTreeModel model = trainDecisionTree(trainingSet);
 
-
         model.save(context, "D:/spark-models/RiceModel");
 
-        JavaPairRDD<Object, Object> predictionAndLabel = testSet.mapToPair(p -> new Tuple2<>(model.predict(p.features()), p.label()));
+        JavaPairRDD<Object, Object> predictionAndLabel = testSet
+                .mapToPair(p -> new Tuple2<>(model.predict(p.features()), p.label()));
+
         writePredictions(predictionAndLabel.map(p->p._1));
 
         BinaryClassificationMetrics metrics = new BinaryClassificationMetrics(predictionAndLabel.rdd());
@@ -224,12 +241,13 @@ public class Main {
         info.add("Area under ROC " + metrics.areaUnderROC() + "");
         info.add("Matrix: \n" + mMetrics.confusionMatrix());
 
-        session.close();
-
         for(String str : info)
             System.out.println(str);
 
-        System.out.print("0-"+classes[0]);
-        System.out.print("1-"+classes[1]);
+        System.out.print("0-" + classes[0] + " 1-" + classes[1] + "\n");
+
+        predictionAndLabel.saveAsTextFile("results");
+
+        session.close();
     }
 }
