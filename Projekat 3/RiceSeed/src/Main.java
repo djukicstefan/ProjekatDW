@@ -176,27 +176,6 @@ public class Main {
         return DecisionTree.trainClassifier(trainingSet, numClasses,categoricalFeaturesInfo, impurity, maxDepth, maxBins);
     }
 
-    private static void writePredictionsWithExpected(JavaPairRDD<Object, Object> preds) {
-
-        try {
-            FileWriter fw = new FileWriter("predictions.csv");
-            List<Double> predicted=new ArrayList<Double>();
-            List<Double> expected=new ArrayList<Double>();
-
-            preds.take(Integer.parseInt(Long.toString(preds.count()))).forEach(tup->{
-                predicted.add((Double) tup._1);
-                expected.add((Double) tup._2);
-            });
-
-            System.out.println(predicted.size());
-            for(int i=0;i<predicted.size();i++){
-                fw.write(predicted.get(i)+","+expected.get(i) + "\n");
-            }
-            fw.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     public static void main(String[] args) {
         try {
