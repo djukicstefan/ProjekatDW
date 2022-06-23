@@ -46,7 +46,7 @@ import org.apache.spark.mllib.tree.model.DecisionTreeModel;
 
 import scala.Tuple2;
 public class Main {
-    public static String[] classes;
+    public static String[] classes = {"Jasmine", "Gonen"};
 
     public static InputStreamReader getReader(String path){
         try {
@@ -109,10 +109,6 @@ public class Main {
         StringIndexerModel indexerModel = indexer.fit(dataFrame);
         dataFrame = indexerModel.transform(dataFrame);
 
-        StructField inputColSchema = dataFrame.schema().apply(indexer.getOutputCol());
-        classes = Attribute.fromStructField(inputColSchema).toMetadata().getMetadata("ml_attr")
-                            .getStringArray("vals");
-
         VectorAssembler assembler = new VectorAssembler().setInputCols(new String[]{"Area", "MajorAxisLength", "MinorAxisLength","Eccentricity","ConvexArea","EquivDiameter","Extent", "Perimeter", "Roundness","AspectRation"})
                                                          .setOutputCol("features");
         dataFrame = assembler.transform(dataFrame);
@@ -121,12 +117,9 @@ public class Main {
         MinMaxScaler scaler = new MinMaxScaler().setInputCol("features").setOutputCol("scaledFeatures");
         dataFrame= scaler.fit(dataFrame).transform(dataFrame);
 
-
-
         JavaSparkContext jc = JavaSparkContext.fromSparkContext(session.sparkContext());
         dataFrame.show(100,false);
         dataFrame.printSchema();
-
 
         List<Row> rows = dataFrame.collectAsList();
         List<LabeledPoint> lbps = new ArrayList<LabeledPoint>();
@@ -141,7 +134,7 @@ public class Main {
         try {
             FileWriter fw = new FileWriter("predictions.csv");
 
-            List<Object> predicted=preds.collect();
+            List<Object> predicted = preds.collect();
 
             for(int i = 0; i < predicted.size(); i++){
                 fw.write(classes[new Double(predicted.get(i).toString()).intValue()] + "\n");
@@ -172,7 +165,6 @@ public class Main {
         int maxDepth = 5;
         int maxBins = 32;
 
-        // Train a DecisionTree model for classification.
         return DecisionTree.trainClassifier(trainingSet, numClasses,categoricalFeaturesInfo, impurity, maxDepth, maxBins);
     }
 
@@ -200,10 +192,10 @@ public class Main {
         JavaRDD<LabeledPoint> trainingSet = tmp[0];
         JavaRDD<LabeledPoint> testSet = tmp[1];
 
-        //LogisticRegressionModel model =t rainLogisticRegression(trainingSet);
-        NaiveBayesModel model = trainNaiveBayes(trainingSet);
-        //SVMModel model = trainSVM(trainingSet);
-        //DecisionTreeModel model = trainDecisionTree(trainingSet);
+        LogisticRegressionModel model = trainLogisticRegression(trainingSet); // Acc: 0.9894679989197948
+        //NaiveBayesModel model = trainNaiveBayes(trainingSet);               // Acc: 0.9519308668647043
+        //SVMModel model = trainSVM(trainingSet);                             // Acc: 0.9829867674858223
+        //DecisionTreeModel model = trainDecisionTree(trainingSet);           // Acc: 0.9894679989197948
 
         model.save(context, "D:/spark-models/RiceModel");
 
